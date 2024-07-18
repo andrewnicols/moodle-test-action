@@ -19,11 +19,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set Greeting
-      run: echo "Hello $INPUT_WHO_TO_GREET."
-      shell: bash
-      env:
-        INPUT_WHO_TO_GREET: ${{ inputs.who-to-greet }}
     - name: Setting up DB PostgreSQL
       uses: m4nu56/postgresql-action@v1
       with:
@@ -31,15 +26,6 @@ runs:
         postgresql db: test
         postgresql user: test
         postgresql password: test
-
-    - name: Random Number Generator
-      id: random-number-generator
-      run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
-      shell: bash
-
-    - name: Run goodbye.sh
-      run: echo goodbye.sh
-      shell: bash
 
     - name: Wait for PostgreSQL to be ready
       shell: bash
@@ -75,13 +61,6 @@ runs:
         repository: moodlehq/moodle-webinstaller-test
         ref: main
         path: webinstall
-      env:
-        MOODLE_SITE_URL: http://localhost:8080/moodle
-        DB_TYPE: pgsql
-        DB_HOST: localhost
-        DB_NAME: test
-        DB_USER: test
-        DB_PASS: test
 
     - name: Install Plugin Composer Dependencies
       shell: bash
@@ -120,6 +99,11 @@ runs:
       working-directory: webinstall
       env:
         MOODLE_SITE_URL: http://localhost:8080/moodle
+        DB_TYPE: pgsql
+        DB_HOST: localhost
+        DB_NAME: test
+        DB_USER: test
+        DB_PASS: test
 
     - name: Print PHP built-in server logs
       shell: bash
